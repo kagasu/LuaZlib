@@ -5,8 +5,17 @@ Zlib support for lua for Wireshark.
 - Lua 5.2
 - zlib
 
+# Download
+https://github.com/kagasu/LuaZlib/releases
+
+# Install
+```
+copy LuaZlib.dll "C:\Program Files\Wireshark\LuaZlib.dll"
+```
+
 # Usage
 ```lua
+-- "C:\Program Files\Wireshark\plugins\test.lua"
 require "LuaZlib"
 
 -- Zlib deflated "abc"
