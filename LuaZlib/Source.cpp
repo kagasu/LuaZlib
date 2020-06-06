@@ -10,9 +10,11 @@
 
 constexpr auto BUFFER_SIZE = 0x4000;
 
-void GetByteArary(uint8_t* src, uint8_t* dst) {
+void GetByteArary(uint8_t* src, uint8_t* dst)
+{
     auto srclength = strlen(reinterpret_cast<char*>(src));
-    for (auto i = 0; i < srclength; i += 2) {
+    for (auto i = 0; i < srclength; i += 2)
+    {
         uint32_t x;
         sscanf_s(reinterpret_cast<char*>(src + i), "%02x", &x);
         dst[i / 2] = x;
@@ -65,7 +67,8 @@ int ZlibInflate(lua_State* L)
     return 1;
 }
 
-int luaopen_LuaZlib(lua_State* L) {
+int luaopen_LuaZlib(lua_State* L)
+{
     lua_register(L, "ZlibInflate", ZlibInflate);
     return 0;
 }
