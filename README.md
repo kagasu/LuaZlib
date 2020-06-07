@@ -25,22 +25,26 @@ print(result)
 require "LuaZlib"
 proto = Proto("Test", "My Test Protocol")
 
+protocolId = ProtoField.new("Protocol id", "test.id", ftypes.STRING)
 inflatedBytes = ProtoField.new("Inflated bytes", "test.bytes", ftypes.STRING)
-proto.fields = { inflatedBytes }
+proto.fields = { protocolId, inflatedBytes }
 
 function proto.dissector(buffer, pinfo, tree)
   pinfo.cols.protocol = "Test"
 
-  local result = ZlibInflate(tostring(buffer()), buffer:len())
+  local result = ZlibInflate(buffer():bytes():tohex(), buffer:len())
+  local bytes = ByteArray.new(result)
+  local tvb = ByteArray.tvb(bytes, "my tvb")
+
   local subtree = tree:add(proto, buffer())
-  subtree:add(inflatedBytes, result)
+  subtree:add(protocolId, tvb(0, 1):uint())
+  subtree:add(inflatedBytes, bytes:tohex())
 end
 
 tcp_table = DissectorTable.get("tcp.port")
 tcp_table:add(1234, proto)
 ```
 ![image](https://user-images.githubusercontent.com/1202244/83941478-a3e2e100-a826-11ea-9603-27382f8a1f1e.png)
-
 
 # Build Requirements
 - Lua 5.2
