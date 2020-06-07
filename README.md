@@ -47,5 +47,5 @@ tcp_table:add(1234, proto)
 ![image](https://user-images.githubusercontent.com/1202244/83965941-3b613600-a8f2-11ea-8833-9d45504611b3.png)
 
 # Build Requirements
-- Lua 5.2
+- Lua
 - zlib
