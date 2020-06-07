@@ -10,10 +10,9 @@
 
 constexpr auto BUFFER_SIZE = 0x4000;
 
-void GetByteArary(uint8_t* src, uint8_t* dst)
+void GetByteArary(uint8_t* src, int srcSize, uint8_t* dst)
 {
-    auto srclength = strlen(reinterpret_cast<char*>(src));
-    for (auto i = 0; i < srclength; i += 2)
+    for (auto i = 0; i < srcSize; i += 2)
     {
         uint32_t x;
         sscanf_s(reinterpret_cast<char*>(src + i), "%02x", &x);
@@ -21,10 +20,10 @@ void GetByteArary(uint8_t* src, uint8_t* dst)
     }
 }
 
-std::string GetByteArrayString(uint8_t* src, int length)
+std::string GetByteArrayString(uint8_t* src, int size)
 {
     std::stringstream ss;
-    for (auto i = 0; i < length; i++)
+    for (auto i = 0; i < size; i++)
     {
         ss << std::hex << std::right << std::setfill('0') << std::setw(2) << static_cast<int>(src[i]);
     }
@@ -35,13 +34,11 @@ std::string GetByteArrayString(uint8_t* src, int length)
 int ZlibInflate(lua_State* L)
 {
     auto str = luaL_checkstring(L, 1);
-    auto srclength = strlen(const_cast<char*>(str));
-    auto dstLength = srclength / 2;
-    auto data = new uint8_t[dstLength];
-
-    GetByteArary(reinterpret_cast<uint8_t*>(const_cast<char*>(str)), data);
-
     auto size = static_cast<unsigned int>(luaL_checkinteger(L, 2));
+    auto data = new uint8_t[size]();
+
+    GetByteArary(reinterpret_cast<uint8_t*>(const_cast<char*>(str)), size * 2, data);
+
     auto outBuf = new unsigned char[BUFFER_SIZE]();
     std::stringstream outStream;
     z_stream zStream{ 0 };
@@ -60,9 +57,10 @@ int ZlibInflate(lua_State* L)
 
     inflateEnd(&zStream);
 
-    auto result = GetByteArrayString(reinterpret_cast<uint8_t*>(const_cast<char*>(outStream.str().c_str())), static_cast<int>(outStream.str().size()));
-
-    lua_pushstring(L, result.c_str());
+    auto result = GetByteArrayString(
+        reinterpret_cast<uint8_t*>(const_cast<char*>(outStream.str().data())),
+        static_cast<int>(outStream.str().size()));
+    lua_pushstring(L, result.data());
 
     return 1;
 }
