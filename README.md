@@ -1,5 +1,5 @@
 # LuaZlib
-Zlib support for lua for Wireshark.
+Zlib support for lua for Wireshark's dissector.
 
 # Download
 https://github.com/kagasu/LuaZlib/releases
