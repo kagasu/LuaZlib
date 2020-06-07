@@ -44,7 +44,7 @@ end
 tcp_table = DissectorTable.get("tcp.port")
 tcp_table:add(1234, proto)
 ```
-![image](https://user-images.githubusercontent.com/1202244/83941478-a3e2e100-a826-11ea-9603-27382f8a1f1e.png)
+![image](https://user-images.githubusercontent.com/1202244/83965941-3b613600-a8f2-11ea-8833-9d45504611b3.png)
 
 # Build Requirements
 - Lua 5.2
